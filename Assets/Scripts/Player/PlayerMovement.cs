@@ -7,57 +7,69 @@ public class PlayerMovement : MonoBehaviour
     Vector3 movement;                   // The vector to store the direction of the player's movement.
     Animator anim;                      // Reference to the animator component.
     Rigidbody playerRigidbody;          // Reference to the player's rigidbody.
+
     int floorMask;                      // A layer mask so that a ray can be cast just at gameobjects on the floor layer.
     float camRayLength = 100f;          // The length of the ray from the camera into the scene.
 
+    //private float VerticalMove;
+    //private CharacterController Controller;
+    //private float gravity = 14.0f;
+    //private float jumpForce = 10.0f;
+
     void Awake()
     {
-        // Create a layer mask for the floor layer.
         floorMask = LayerMask.GetMask("Floor");
-
-        // Set up references.
+ 
         anim = GetComponent<Animator>();
         playerRigidbody = GetComponent<Rigidbody>();
+
+        //Controller = GetComponent<CharacterController>();
     }
 
 
     void FixedUpdate()
     {
-        // Store the input axes.
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
+        //float JH = transform.position.y;
 
-        // Move the player around the scene.
+        //VerticalMove = 0;
+        //if (floorMask.)
+        //{
+        //    VerticalMove = -gravity * Time.deltaTime;
+        //    if (Input.GetButtonDown("Jump"))
+        //        VerticalMove = jumpForce;
+        //}
+        //else
+        //{
+        //    VerticalMove -= gravity * Time.deltaTime;
+        //}
+
+
         Move(h, v);
 
-        // Turn the player to face the mouse cursor.
         Turning();
 
-        // Animate the player.
         Animating(h, v);
     }
 
     void Move(float h, float v)
     {
-        // Set the movement vector based on the axis input.
-        movement.Set(h, 0f, v);
+        movement.Set(h, 0, v);
 
-        // Normalise the movement vector and make it proportional to the speed per second.
         movement = movement.normalized * speed * Time.deltaTime;
 
-        // Move the player to it's current position plus the movement.
         playerRigidbody.MovePosition(transform.position + movement);
     }
 
+    
+
     void Turning()
     {
-        // Create a ray from the mouse cursor on screen in the direction of the camera.
         Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        // Create a RaycastHit variable to store information about what was hit by the ray.
         RaycastHit floorHit;
 
-        // Perform the raycast and if it hits something on the floor layer...
         if (Physics.Raycast(camRay, out floorHit, camRayLength, floorMask))
         {
             // Create a vector from the player to the point on the floor the raycast from the mouse hit.
